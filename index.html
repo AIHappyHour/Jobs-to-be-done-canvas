@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jobs To Be Done Canvas</title>
+<style>
+:root{--ink:#111;--muted:#555;--accent:#2563eb;--line:#d9dee7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:#fff;color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:820px;margin:0 auto;padding:24px 20px 48px}
+header{display:flex;align-items:center;gap:16px}
+header img{width:64px;height:64px;flex:none}
+h1{font-size:clamp(1.5rem,5vw,2.4rem);line-height:1.15;margin:0;font-weight:700}
+.intro{color:var(--muted);max-width:62ch;margin:20px 0 16px}
+.card{border:2px solid #333;border-radius:28px;padding:20px 24px;margin:8px 0}
+.line{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 0;font-size:1.15rem;color:#3c3c3c}
+.lead{min-width:5.5em;flex:none}
+.blank{font:inherit;font-weight:600;color:#000;border:0;border-radius:4px;padding:8px 14px;min-height:44px;cursor:pointer;text-align:left;max-width:100%;overflow-wrap:anywhere;box-shadow:inset 0 0 0 2px transparent}
+.blank.empty{opacity:.9}
+.blank:hover{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55)}
+.blank:focus-visible{outline:3px solid #93b4f8;outline-offset:2px}
+.c1{background:#4a9ff5}.c2{background:#e0432e}.c3{background:#85d65a}.c4{background:#f7e55a}.c5{background:#f09a36}.c6{background:#e066a6}
+.hint{font-size:.9rem;color:var(--muted);margin:6px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0 4px}
+.btn{font:inherit;font-weight:700;border-radius:999px;padding:12px 30px;min-height:46px;cursor:pointer;border:2px solid var(--accent);background:var(--accent);color:#fff}
+.btn.ghost{background:#fff;color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible{outline:3px solid #93b4f8;outline-offset:2px}
+.msg{text-align:center;min-height:1.5em;color:var(--muted);font-size:.92rem;margin:8px 0 0}
+h2.sec{font-size:1.2rem;margin:32px 0 8px;padding-top:20px;border-top:1px solid var(--line)}
+.saved{border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:10px 0}
+.saved p{margin:2px 0;font-size:.95rem}
+.saved .tag{font-weight:700}
+.saved .mini{display:flex;gap:8px;margin-top:8px}
+.link{font:inherit;background:none;border:0;color:var(--accent);text-decoration:underline;cursor:pointer;padding:6px 4px;min-height:36px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #b8c0cc;border-radius:8px}
+textarea{min-height:90px;resize:vertical}
+dialog{border:0;border-radius:14px;padding:24px;width:min(560px,calc(100vw - 32px));box-shadow:0 12px 40px rgba(0,0,0,.3);color:var(--ink);background:#fff}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 8px;font-size:1.2rem}
+dialog .chip{display:inline-block;padding:2px 10px;border-radius:4px;color:#000;font-weight:700}
+.dlg-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.dlg-actions .btn{padding:10px 22px}
+.ex .line{font-size:1rem;padding:5px 0}
+.ex .blank{cursor:default;min-height:0;padding:3px 10px;box-shadow:none}
+pre{white-space:pre-wrap;background:#f5f7fa;border-radius:8px;padding:12px;font:.85rem/1.5 ui-monospace,Menlo,Consolas,monospace;margin:12px 0;max-height:240px;overflow:auto}
+@media (max-width:560px){.card{padding:12px 14px;border-radius:20px}.line{font-size:1.05rem}header img{width:52px;height:52px}}
+</style>
+</head>
+<body>
+<main>
+ <header>
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAIAAABt+uBvAAAFHUlEQVR42u2bO08bSxSAZ2eGXdKABGlSAUWadKGIggQF8jg0FCgNjzywiaL0oaVLE4mGUCEFP3i5S4X4C5QggQIJxF4ehgRRBCkF3ufc4lytVkR3rw3x7jqcr0AWeNbMt2dmzpwdE4IgCIIgCIIgCIIgCIIgCIIgCIIgCII0EoqiKIpyW7rKOWeMVd+EUnrlRTUwxjjnDay1pt62tra2tLTU6eIxih1CyJ07d168ePH48WO4ydX0s6en5/T0tFwuP3r0qJrOw2X7+vqeP3+uqqr30XEH/u+PHz9KKW3bHhkZIYQ0NTUFNOGcE0JmZ2ellFLK6elp75f/BVxwfHwcmszMzFRzJ64zAv74FV3XJYQ8fPjQtm1CSKFQGB0dtSwr2BEhBLrqui40DLZjWVYqlcrn84ZhEEI6OzvrFEH1GsOGYXDOoc8rKytVOlIUhVIa3E/PTi6XM01T0zRd19++fasoCtybxhAEnYSfjuNUH0dVxg7YUVVV13UhRKlUajBB3qihlHLO/4ij3+2USqVEIlEqlRhj9bBTd0GU0qmpqWKxyBizLKtQKIyNjV3PEdhJp9N+O0IIXdcZY47jNNgyv76+DhNQf39/V1fX2dmZlNI0TSnl2NjYlXUNFqwPHz5Ak/fv319ZxeDN6XRaSmkYhpSyWCx2dXXVaeUKL4IIIXfv3tV1PZlM/vjxA6JgZWWlpjjyYiebzYYfO3UXZFkWpXRra0sI8f3791odwfsnJib8dhKJRGgjK4xU3XVdTdM+f/6cTCb9jp49exbsyLOTyWT8dg4ODkKbd0Lay9i2zTm/4mh5eTnAEef8ip1isRiynfAEBTu6vLy8svOilFYqlVevXvntCCFCthOqIL8j/3y0vLycSqVc1/XWI0hq3rx5Mz8/H62dsAV5jnZ2dvyOcrnc4ODgxcUFvOfi4uLp06dzc3MRjqzw8qChoaHfsxXIcR48eHBycgKb/kqlsre3B02+fPlimqZlWVLK/f39jo6OEPKdeAn63ZHjONKHbdsxsRNZRc4/1k5PTymlXpXDcRzG2Ldv34QQh4eH0Y6sKEuW4Gh3d1cIcXJywjl3XRf2t5ubm0+ePIncTsSC/I6SyeTx8bGiKLZtK4qytLSk67qmaZHPytEXvW3bVlV1d3d3bW0N5i/Xdaenp1OplGEYN6wf/Q2CwAiUjYivbJrL5V6+fHnzGtsN4TFZ+1zX9SpekFXbtr2wsEAIWVxchHTp9kYQAOV3xtinT592dnZgL7awsDA+Ph5hHMVIkJQShtjGxsbAwICXZ+fz+QgdxfHJZHt7e7lcFkKUy+WmpibTNCN0FEdBpmlSSiGHLJfLqqqCo1QqFb6jOAqCBzjNzc1fv371O8rlcuE7iu/Df8ghI3cU69MRcXAU9+MjnqNEInF8fOw5SqfT4ThqgPM14Ghvb08I4TnKZrPgKPgQyK0QFOwI/nTbBQU4mpiYqKujegmCtNj/ok6OMpkMOKrTcbx6CaKUOo4DtcGatAL/6yiRSBwdHamqahhGJpMZHh72PxeJtSCoV1QqFcYYY+znz5/VO4VjwMHjBRzt7+8LIY6OjjRNI4RMTk42ylzxb7Giu7t7dXX13bt31ZzRhSa9vb3n5+dnZ2dw9DN4yIDE+/fvb29v//r16/Xr1+RvevIRsE1ta2ur6U5omnbv3r3G6yqlFIZYraFHajmLeb2z5w3MNb6KcIu+vYAgCIIgCIIgCIIgCIIgCIIgCIIgCBJT/gGUKMK5wI50GwAAAABJRU5ErkJggg==" alt="NK logo">
+  <h1>Jobs To Be Done Canvas</h1>
+ </header>
+ <p class="intro">Complete the card by clicking each coloured blank and writing your answer. Not sure how? Press “See examples”. You can write more than one card.</p>
+
+ <div class="card" id="card"></div>
+ <p class="hint">Tip: click a blank to read what it means. You can list a few ideas separated by slashes.</p>
+ <div class="actions">
+  <button class="btn ghost" id="examples">See examples</button>
+  <button class="btn" id="submit" disabled>Submit</button>
+  <button class="btn ghost" id="reset">Reset</button>
+ </div>
+ <p class="msg" id="msg" role="status"></p>
+
+ <section id="mine" hidden>
+  <h2 class="sec">Your cards (<span id="count">0</span>)</h2>
+  <div id="list"></div>
+  <label for="name">Your name</label>
+  <input type="text" id="name" autocomplete="name" placeholder="e.g. Sam">
+  <div class="actions" style="justify-content:flex-start">
+   <button class="btn" id="copy">Copy all</button>
+   <button class="btn ghost" id="email">Email all</button>
+  </div>
+  <p class="msg" id="rmsg" role="status" style="text-align:left"></p>
+  <p class="hint">Nothing is sent automatically. Copy and paste into a message, or use the email button.</p>
+ </section>
+</main>
+
+<dialog id="edit" aria-labelledby="e-t">
+ <h3 id="e-t"></h3><p id="e-b"></p>
+ <label for="e-in" id="e-l">Your answer</label>
+ <textarea id="e-in"></textarea>
+ <div class="dlg-actions"><button class="btn" id="e-save">Save</button><button class="btn ghost" id="e-clear" type="button">Clear</button><button class="btn ghost" data-close>Cancel</button></div>
+</dialog>
+
+<dialog id="exd" aria-labelledby="x-t">
+ <h3 id="x-t">Example cards</h3>
+ <div class="ex" id="x-card"></div>
+ <p class="hint" id="x-n"></p>
+ <div class="dlg-actions"><button class="btn ghost" id="x-prev">Previous</button><button class="btn ghost" id="x-next">Next</button><button class="btn" data-close>Close</button></div>
+</dialog>
+
+<script>
+/* ===== EDIT HERE: email address, blank labels, explanations and examples ===== */
+const SEND_TO = "nidhiskumar@gmail.com";
+const FIELDS = [
+ {key:"who",  lead:"As a",        label:"self-identifier",            c:"c1", req:true,
+  help:"PLACEHOLDER: Describe who you are in this situation. This could be a role, a life stage, or a situation you are in. You can list a few ways to describe yourself."},
+ {key:"need", lead:"I want to",   label:"unmet needs / frustration",  c:"c2", req:true,
+  help:"PLACEHOLDER: What do you want to do, or what is frustrating you right now? Describe the need that is not being met."},
+ {key:"tool", lead:"I need",      label:"solution / tool",            c:"c3", req:true,
+  help:"PLACEHOLDER: What would solve this? Name the product, service or tool you need."},
+ {key:"goal", lead:"in order to", label:"goal / objective",           c:"c4", req:true,
+  help:"PLACEHOLDER: What are you trying to achieve with that solution? Describe the goal or objective."},
+ {key:"out",  lead:"so that",     label:"desired outcome / emotion",  c:"c5", req:true,
+  help:"PLACEHOLDER: What result or feeling do you want in the end? Describe the outcome you hope for."},
+ {key:"ctx",  lead:"",            label:"optional context / barrier", c:"c6", req:false,
+  help:"PLACEHOLDER (optional): Is there anything in the way, or any extra context that matters? For example a barrier, a time pressure or a situation."}
+];
+const EXAMPLES = [
+ {who:"person new to the city", need:"make new friends, know my neighbours", tool:"to throw a party at my place", goal:"connect with people", out:"I can be less lonely and have someone to call in case of emergency", ctx:""},
+ {who:"toddler mom", need:"throw a birthday party", tool:"everything in one place", goal:"not spend hours party planning", out:"I can be seen as a good mom without being stressed out", ctx:"because I'm studying at Climatebase and don't have as much time as the other toddler moms"},
+ {who:"person who has never hosted a party at home before", need:"go all out to throw an impressive gathering", tool:"decor that won't overcrowd my tiny apartment", goal:"create a Pinterest-worthy party on a budget", out:"my friends come over again and my home becomes a gathering place", ctx:"because I'm too old to go out to noisy party places now!"},
+ {who:"Book club member", need:"create a welcoming space to discuss books", tool:"affordable decor I can use every meeting", goal:"create a memorable, warm book discussion", out:"we build a stronger community and get more members", ctx:"because it's so hard to make friends in the city!"}
+];
+/* ============================================================================== */
+
+const $ = id => document.getElementById(id);
+let cur = {}, saved = [], editKey = null, exI = 0;
+
+function renderCard(el, data, interactive){
+  el.innerHTML = "";
+  FIELDS.forEach(f => {
+    const row = document.createElement("div"); row.className = "line";
+    if (f.lead){ const s = document.createElement("span"); s.className = "lead"; s.textContent = f.lead; row.appendChild(s); }
+    const b = document.createElement(interactive ? "button" : "span");
+    const v = (data[f.key] || "").trim();
+    if (!interactive && !v) return;
+    b.className = "blank " + f.c + (v ? "" : " empty");
+    b.textContent = v || f.label;
+    if (interactive){ b.type = "button"; b.onclick = () => openEdit(f); b.setAttribute("aria-label", (f.lead ? f.lead + " " : "") + f.label + (v ? ": " + v + " (edit)" : " (click to fill in)")); }
+    row.appendChild(b); el.appendChild(row);
+  });
+}
+function refresh(){
+  renderCard($("card"), cur, true);
+  const done = FIELDS.filter(f => f.req && (cur[f.key] || "").trim()).length, total = FIELDS.filter(f => f.req).length;
+  $("submit").disabled = done < total;
+  $("msg").textContent = done < total ? done + " of " + total + " required blanks filled." : "Card complete. Press Submit to save it and write another.";
+}
+function openEdit(f){
+  editKey = f.key;
+  $("e-t").innerHTML = ""; const chip = document.createElement("span"); chip.className = "chip " + f.c; chip.textContent = f.label; $("e-t").appendChild(chip);
+  $("e-b").textContent = f.help;
+  $("e-l").textContent = (f.lead ? f.lead + "…" : "Your answer") + (f.req ? "" : " (optional)");
+  $("e-in").value = cur[f.key] || "";
+  $("edit").showModal(); $("e-in").focus();
+}
+$("e-save").onclick = () => { cur[editKey] = $("e-in").value.trim(); $("edit").close(); refresh(); };
+$("e-clear").onclick = () => { $("e-in").value = ""; $("e-in").focus(); };
+$("e-in").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); $("e-save").click(); } });
+
+$("reset").onclick = () => { cur = {}; refresh(); $("msg").textContent = "Card cleared. Your saved cards are untouched."; };
+$("submit").onclick = () => {
+  saved.push({...cur}); cur = {}; refresh(); renderSaved();
+  $("msg").textContent = "Card saved. Write another, or copy / email your cards below.";
+};
+function renderSaved(){
+  $("mine").hidden = saved.length === 0; $("count").textContent = saved.length;
+  const list = $("list"); list.innerHTML = "";
+  saved.forEach((c, i) => {
+    const d = document.createElement("div"); d.className = "saved";
+    const h = document.createElement("p"); h.className = "tag"; h.textContent = "Card " + (i + 1); d.appendChild(h);
+    FIELDS.forEach(f => { if (c[f.key]){ const p = document.createElement("p"); p.textContent = (f.lead ? f.lead + " " : "") + c[f.key]; d.appendChild(p); } });
+    const m = document.createElement("div"); m.className = "mini";
+    const e = document.createElement("button"); e.className = "link"; e.textContent = "Edit";
+    e.onclick = () => {
+      if (Object.values(cur).some(v => (v || "").trim())){ $("msg").textContent = "Submit or reset the card you are writing first, then edit."; window.scrollTo({top:0,behavior:"smooth"}); return; }
+      cur = {...c}; saved.splice(i, 1); refresh(); renderSaved(); window.scrollTo({top:0,behavior:"smooth"});
+      $("msg").textContent = "Editing card " + (i + 1) + ". Press Submit when done.";
+    };
+    const x = document.createElement("button"); x.className = "link"; x.textContent = "Delete";
+    x.onclick = () => { saved.splice(i, 1); renderSaved(); };
+    m.append(e, x); d.appendChild(m); list.appendChild(d);
+  });
+}
+function buildText(){
+  const name = $("name").value.trim() || "(no name)";
+  const cards = saved.map((c, i) => "CARD " + (i + 1) + "\n" + FIELDS.map(f => {
+    if (!c[f.key]) return null;
+    return f.lead ? f.lead.charAt(0).toUpperCase() + f.lead.slice(1) + " " + c[f.key] : "Context: " + c[f.key];
+  }).filter(Boolean).join("\n"));
+  return "JOBS TO BE DONE RESULTS\nName: " + name + "\n\n" + cards.join("\n\n");
+}
+$("copy").onclick = async () => {
+  const t = buildText();
+  try { await navigator.clipboard.writeText(t); }
+  catch(e){ const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(_){} ta.remove(); }
+  $("rmsg").textContent = "Copied! Paste it into Slack, email or any message.";
+};
+$("email").onclick = () => {
+  window.location.href = "mailto:" + SEND_TO + "?subject=" + encodeURIComponent("Jobs To Be Done results") + "&body=" + encodeURIComponent(buildText());
+  $("rmsg").textContent = "If your email app didn't open, use Copy all instead.";
+};
+
+function showEx(){
+  renderCard($("x-card"), EXAMPLES[exI], false);
+  $("x-n").textContent = "Example " + (exI + 1) + " of " + EXAMPLES.length;
+}
+$("examples").onclick = () => { showEx(); $("exd").showModal(); };
+$("x-prev").onclick = () => { exI = (exI + EXAMPLES.length - 1) % EXAMPLES.length; showEx(); };
+$("x-next").onclick = () => { exI = (exI + 1) % EXAMPLES.length; showEx(); };
+
+document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+[$("edit"), $("exd")].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+refresh();
+</script>
+</body>
+</html>
